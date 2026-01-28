@@ -65,7 +65,7 @@ const BottomNavbar = memo(function BottomNavbar({
             <div className={getIconWrapperClass("category")}>
               <CategoryIcon />
             </div>
-            <span>Categories</span>
+            <span>Categorías</span>
           </button>
 
           {/* Cart */}
@@ -77,7 +77,7 @@ const BottomNavbar = memo(function BottomNavbar({
             <div className={getIconWrapperClass("cart")}>
               <OpenCart quantity={cartDetail?.cart?.itemsQty} />
             </div>
-            <span>Cart</span>
+            <span>Carrito</span>
           </Cart>
 
           {/* Account */}
@@ -90,7 +90,7 @@ const BottomNavbar = memo(function BottomNavbar({
               <div className={getIconWrapperClass("account")}>
                 <OpenAuth />
               </div>
-              <span>Account</span>
+              <span>Cuenta</span>
             </UserAccount>
           </Suspense>
 
