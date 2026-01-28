@@ -35,7 +35,8 @@ const Theme = ({ title, description, products }: ProductsSectionProps) => {
                   name: item?.name || item.sku,
                   id: item.id,
                   type: item.type,
-                  isSaleable: item.isSaleable
+                  isSaleable: item.isSaleable,
+                  superAttributeOptions: item.superAttributeOptions
                 }} specialPrice={""} />
             );
           })}

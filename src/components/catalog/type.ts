@@ -96,6 +96,7 @@ export interface ProductSectionNode {
   minimumPrice?: string | number;
   price?: string | number;
   specialPrice?: string;
+  superAttributeOptions?: string;
   images?: {
     edges: Array<{
       node: {

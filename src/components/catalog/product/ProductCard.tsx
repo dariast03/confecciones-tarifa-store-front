@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import Grid from "@/components/theme/ui/grid/Grid";
 import AddToCartButton from "@/components/theme/ui/AddToCartButton";
 import { NextImage } from "@/components/common/NextImage";
 import { Price } from "@/components/theme/ui/Price";
+import { getColorHex } from "@/utils/colorMap";
+import { safeParse } from "@/utils/helper";
 
 export const ProductCard: FC<{
   currency: string;
@@ -16,8 +18,29 @@ export const ProductCard: FC<{
     id: string;
     type: string;
     isSaleable?: string;
+    superAttributeOptions?: string;
   };
 }> = ({ currency, price, specialPrice, imageUrl, product }) => {
+
+  // Extract color options from product
+  const colorOptions = useMemo(() => {
+    if (product.type !== "configurable" || !product.superAttributeOptions) return [];
+
+    const superAttributeOptions = safeParse(product.superAttributeOptions);
+    if (!superAttributeOptions || !Array.isArray(superAttributeOptions)) return [];
+
+    const colorAttribute = superAttributeOptions.find(
+      (attr: any) => attr.code === "color"
+    );
+
+    if (!colorAttribute?.options || colorAttribute.options.length <= 1) return [];
+
+    return colorAttribute.options.map((option: any) => ({
+      label: option.label,
+      hex: getColorHex(option.label || ""),
+    }));
+  }, [product]);
+
   return (
     <Grid.Item
       key={product.id}
@@ -56,12 +79,15 @@ export const ProductCard: FC<{
           {product?.name}
         </h3>
 
+
         <div className="flex items-center gap-2">
           {product?.type === "configurable" && (
             <span className="text-xs text-gray-600 dark:text-gray-400 md:text-sm">
               Desde los
             </span>
           )}
+
+
           {product?.type === "simple" && specialPrice ? (
             <>
               <div className="flex items-center gap-2">
@@ -80,6 +106,21 @@ export const ProductCard: FC<{
             />
           )}
         </div>
+
+
+        {/* Color swatches if multiple colors available */}
+        {colorOptions.length > 0 && (
+          <div className="mt-2 flex gap-1.5">
+            {colorOptions.map((color: { label: string; hex: string }, index: number) => (
+              <div
+                key={index}
+                className="h-5 w-5 rounded-full border-2 border-black/20 dark:border-white/20"
+                style={{ backgroundColor: color.hex }}
+                title={color.label}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Grid.Item>
   );

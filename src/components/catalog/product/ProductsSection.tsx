@@ -34,6 +34,7 @@ export function ProductsSection({ title, description, products }: ProductsSectio
                 name: item?.name || item.sku,
                 id: item.id,
                 type: item.type,
+                superAttributeOptions: item.superAttributeOptions
               }} specialPrice={""} />
           );
         })}

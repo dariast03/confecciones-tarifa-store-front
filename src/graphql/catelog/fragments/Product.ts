@@ -8,6 +8,8 @@ export const PRODUCT_CORE_FRAGMENT = gql`
     name
     price
     urlKey
+    combinations
+    superAttributeOptions
     baseImageUrl
     minimumPrice
     specialPrice
