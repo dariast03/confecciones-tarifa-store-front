@@ -1,0 +1,210 @@
+"use client";
+
+import clsx from "clsx";
+import { getSession, signIn } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Button } from "@components/common/button/Button";
+import { EMAIL_REGEX, SIGNIN_IMG } from "@/utils/constants";
+import InputText from "@components/common/form/Input";
+import { useCustomToast } from "@/utils/hooks/useToast";
+import { useMergeCart } from "@utils/hooks/useMergeCart";
+import { getCookie } from "@utils/getCartToken";
+import { setCookie } from "@utils/helper";
+import { setLocalStorage } from "@/store/local-storage";
+import { useAppDispatch } from "@/store/hooks";
+import { setUser } from "@/store/slices/user-slice";
+import { useCartDetail } from "@utils/hooks/useCartDetail";
+import { GUEST_CART_ID, GUEST_CART_TOKEN, IS_GUEST } from "@/utils/constants";
+
+type LoginFormInputs = {
+  username: string;
+  password: string;
+};
+
+export default function LoginForm() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { showToast } = useCustomToast();
+  const { getCartDetail } = useCartDetail()
+  const { mergeCart } = useMergeCart();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormInputs>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    try {
+      // First, handle cart merging before sign in
+      const guestCartId = getCookie(GUEST_CART_ID);
+      const guestCartToken = getCookie(GUEST_CART_TOKEN);
+
+      const result = await signIn("credentials", {
+        redirect: false,
+        ...data,
+        callbackUrl: "/",
+      });
+
+      if (!result?.ok) {
+        showToast(result?.error || "Credenciales de inicio de sesión inválidas.", "warning");
+        return;
+      }
+      showToast("¡Bienvenido! Has iniciado sesión exitosamente.", "success");
+      setLocalStorage("email", data?.username)
+
+      const session = await getSession();
+      const userToken: string | undefined = session?.user?.accessToken;
+
+      if (!userToken) {
+        console.warn("No API token available in session after login");
+      }
+
+      if (session?.user) {
+        dispatch(setUser(session.user as any));
+      }
+
+      // Only merge cart if user had a guest cart before login
+      if (userToken && guestCartId && guestCartToken) {
+        try {
+          await mergeCart(userToken, parseInt(guestCartId, 10));
+          setCookie(GUEST_CART_TOKEN, userToken);
+          setCookie(IS_GUEST, "false");
+          await getCartDetail();
+        } catch (err) {
+          console.error("mergeCart failed:", err);
+        }
+      } else if (userToken) {
+        // User logged in without a guest cart, just set the token
+        setCookie(GUEST_CART_TOKEN, userToken);
+        setCookie(IS_GUEST, "false");
+      }
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 100);
+
+
+    } catch (error) {
+      console.error(error);
+      showToast("Algo salió mal. Por favor intenta de nuevo.", "danger");
+    }
+  };
+
+  return (
+    <div className="flex h-[80vh] w-full items-center max-w-screen-2xl mx-auto px-4  xss:px-7.5 justify-between gap-4 lg:my-16 xl:my-28">
+      <div className="flex w-full max-w-[583px] flex-col gap-y-4 lg:gap-y-12">
+        <div className="font-outfit">
+          <h2 className="py-1 text-2xl font-semibold sm:text-4xl">
+            Inicia sesión en tu cuenta
+          </h2>
+          <p className="mt-2  text-base md:text-lg font-normal text-black/60 dark:text-neutral-400">
+            Si tienes una cuenta, inicia sesión con tu dirección de correo electrónico.
+          </p>
+        </div>
+
+        <form
+          noValidate
+          className="flex flex-col gap-y-4 lg:gap-y-12"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex flex-col gap-y-2.5 lg:gap-4">
+            <InputText
+              {...register("username", {
+                required: "El correo electrónico es obligatorio",
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Por favor ingresa un correo electrónico válido.",
+                },
+              })}
+              errorMsg={
+                errors.username?.message ? [errors.username.message] : undefined
+              }
+              label="Ingresa Tu Dirección de Correo Electrónico"
+              labelPlacement="outside"
+              name="username"
+              placeholder="Ingresa tu dirección de correo electrónico"
+              rounded="md"
+              size="lg"
+              typeName="email"
+            />
+
+            <InputText
+              {...register("password", {
+                required: "La contraseña es obligatoria",
+                minLength: {
+                  value: 2,
+                  message: "Debe tener al menos 2 caracteres",
+                },
+                validate: (value) => {
+                  if (!/[0-2]/.test(value))
+                    return "Debe contener al menos un número.";
+
+                  return true;
+                },
+              })}
+              errorMsg={
+                errors.password?.message ? [errors.password.message] : undefined
+              }
+              label="Ingresa Contraseña"
+              labelPlacement="outside"
+              name="password"
+              placeholder="Ingresa tu contraseña"
+              rounded="md"
+              size="lg"
+              typeName="password"
+            />
+
+            <Link
+              className="text-end text-sm font-medium text-blue-600 underline hover:text-blue-500 underline"
+              href="/customer/forget-password"
+              aria-label="Go to forgot password page"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
+
+          <div className="flex flex-col gap-2 lg:gap-y-3">
+            <Button
+              className="cursor-pointer"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              title="Iniciar Sesión"
+              type="submit"
+            />
+            <span className="mx-auto font-outfit sm:mx-0">
+              ¿Nuevo cliente?{" "}
+              <Link
+                className="font-medium text-blue-600 hover:text-blue-500 underline"
+                href="/customer/register"
+                aria-label="Go to create account page"
+              >
+                Crea tu cuenta
+              </Link>
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div className="relative hidden aspect-[0.9] max-h-[692px] w-full max-w-[790px] sm:block md:aspect-[1.14]">
+        <Image
+          fill
+          priority
+          alt="Imagen de Inicio de Sesión"
+          className={clsx(
+            "relative h-full w-full object-fill",
+            "transition duration-300 ease-in-out group-hover:scale-105"
+          )}
+          sizes={"(min-width: 768px) 66vw, 100vw"}
+          src={SIGNIN_IMG}
+        />
+      </div>
+    </div>
+  );
+}

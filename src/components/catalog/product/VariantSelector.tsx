@@ -1,0 +1,84 @@
+"use client";
+
+import { AttributeData, AttributeOptionNode } from "@/types/types";
+import { createUrl, getValidTitle } from "@/utils/helper";
+import clsx from "clsx";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ColorSelector } from "./ColorSelector";
+
+export function VariantSelector({
+  variants,
+  setUserInteracted,
+}: {
+  variants: AttributeData[];
+  setUserInteracted: React.Dispatch<React.SetStateAction<boolean>>;
+  possibleOptions: Record<string, number[]>;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  if (!variants?.length) return null;
+
+  return (
+    <>
+      {variants.map((option) => {
+        const attributeCode = option.code;
+        const isColorAttribute = attributeCode.toLowerCase() === "color";
+
+        return (
+          <dl key={option.id} className="mb-8">
+            <dt className="mb-4 text-sm capitalize tracking-wide">
+              {option.label || getValidTitle(attributeCode)}
+            </dt>
+
+            <dd className="flex flex-wrap gap-3">
+              {isColorAttribute ? (
+                <ColorSelector
+                  attributeCode={attributeCode}
+                  options={option.options as AttributeOptionNode[]}
+                  setUserInteracted={setUserInteracted}
+                />
+              ) : (
+                <>
+                  {(option.options as AttributeOptionNode[]).map((node) => {
+                    const isActive = searchParams.get(attributeCode) === String(node.id);
+                    const isAvailable = node?.isValid;
+                    const nextParams = new URLSearchParams(searchParams.toString());
+                    nextParams.set(attributeCode, String(node.id));
+
+                    const optionUrl = createUrl(pathname, nextParams);
+
+                    return (
+                      <button
+                        key={node.id}
+                        disabled={!isAvailable}
+                        onClick={() => {
+                          if (!isAvailable) return;
+                          router.replace(optionUrl, { scroll: false });
+                          setUserInteracted(true);
+                        }}
+                        className={clsx(
+                          "flex min-w-[48px] cursor-pointer items-center justify-center rounded-lg bg-neutral-100 px-3.5 py-2.5 text-sm dark:border-neutral-800 dark:bg-neutral-800",
+                          {
+                            "cursor-default ring-2 ring-blue-600 text-blue-600": isActive,
+                            "ring-[0] transition duration-300 ease-in-out hover:scale-110 hover:border-blue-600":
+                              !isActive && isAvailable,
+                            "relative z-10 cursor-not-allowed overflow-hidden bg-neutral-100 text-neutral-500 ring-1 ring-neutral-300 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-neutral-300 before:transition-transform dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700 before:dark:bg-neutral-700":
+                              !isAvailable,
+                          }
+                        )}
+                      >
+                        {node.label || node.adminName}
+                      </button>
+                    );
+                  })}
+                </>
+              )}
+            </dd>
+          </dl>
+        );
+      })}
+    </>
+  );
+}

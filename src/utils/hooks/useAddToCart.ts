@@ -1,0 +1,252 @@
+import { useMutation } from '@tanstack/react-query';
+import { useCustomToast } from './useToast';
+import { useAppDispatch } from '@/store/hooks';
+import { fetchHandler } from '../fetch-handler';
+import { addItem, clearCart } from '@/store/slices/cart-slice';
+import { isObject } from '@utils/type-guards';
+import { getCartToken, getCookie } from '@utils/getCartToken';
+import { useGuestCartToken } from './useGuestCartToken';
+import { IS_GUEST } from '@/utils/constants';
+
+interface AddInput {
+  productId: number;
+  quantity: number;
+  cartId?: number;
+  token: string;
+}
+
+interface UpdateInput {
+  token: string;
+  cartItemId: number;
+  quantity: number;
+}
+
+interface removeInput {
+  token: string;
+  cartItemId: number;
+}
+
+interface AddProductInCartResponse {
+  id: number;
+  success: boolean;
+  message: string;
+  sessionToken: string;
+  isGuest: boolean;
+  itemsQty: number;
+  itemsCount: number;
+  cartToken: string | null;
+  items: {
+    edges: {
+      node: {
+        id: number;
+        cartId: number;
+        productId: number;
+        name: string;
+        sku: string;
+        quantity: number;
+        type: string;
+        productUrlKey: string;
+        canChangeQty: boolean;
+      };
+    }[];
+  };
+}
+
+interface AddToCartAPIResponse {
+  createAddProductInCart: {
+    addProductInCart: AddProductInCartResponse;
+  };
+}
+
+interface RemoveCartItem {
+  itemsQty: number;
+  itemsCount: number;
+  cartToken: string | null;
+  isGuest: boolean;
+}
+
+interface RemoveCartResponse {
+  success: boolean;
+  message: string;
+  removeCartItem: RemoveCartItem;
+}
+
+interface RemoveCartAPIResponse {
+  createRemoveCartItem: RemoveCartResponse;
+}
+
+export const useAddProduct = () => {
+  const dispatch = useAppDispatch();
+  const { createGuestToken, resetGuestToken } = useGuestCartToken();
+  const { showToast } = useCustomToast();
+
+  const { mutateAsync, isPending: isCartLoading } = useMutation({
+    mutationFn: ({ token, ...input }: AddInput) =>
+      fetchHandler({
+        url: 'cart/addToCart',
+        method: 'POST',
+        contentType: true,
+        body: { ...input },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+
+    onSuccess: (res: { error: any; data: AddToCartAPIResponse }) => {
+      const responseData = res?.data?.createAddProductInCart?.addProductInCart;
+
+      if (!responseData?.success) {
+        showToast(res?.error?.message?.message, 'danger');
+        return;
+      }
+      if (responseData) {
+        if (responseData.success) {
+          dispatch(addItem(responseData as any));
+          showToast('Producto agregado al carrito exitosamente', 'success');
+        }
+      }
+    },
+
+    onError: (err: any) => {
+      showToast(err?.message ?? 'Error', 'danger');
+    },
+  });
+
+  const onAddToCart = async ({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+    token?: string;
+    cartId?: number | string;
+  }) => {
+    // Ensure token exists - create if needed
+    let token = getCartToken();
+
+    if (!token) {
+      token = await createGuestToken();
+
+      if (!token) {
+        showToast('Error al crear sesión del carrito', 'danger');
+        return;
+      }
+    }
+
+    await mutateAsync({
+      productId: parseInt(productId),
+      quantity,
+      token,
+    });
+  };
+
+  //--------Remove Cart Product Quantity--------//
+  const { mutateAsync: removeFromCart, isPending: isRemoveLoading } =
+    useMutation({
+      mutationFn: ({ token, ...input }: removeInput) =>
+        fetchHandler({
+          url: 'cart/removeCart',
+          method: 'POST',
+          contentType: true,
+          body: { ...input },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      onSuccess: async (response: { data: RemoveCartAPIResponse }) => {
+        const responseData = response?.data?.createRemoveCartItem;
+        if (isObject(responseData)) {
+          const message =
+            responseData?.message ||
+            'Artículo del carrito eliminado exitosamente';
+          dispatch(addItem(responseData?.removeCartItem as any));
+          showToast(message as string, 'warning');
+
+          if (!responseData?.removeCartItem?.itemsQty) {
+            dispatch(clearCart());
+
+            const isGuest = getCookie(IS_GUEST);
+            if (isGuest === 'true') {
+              resetGuestToken();
+            }
+          }
+        } else {
+          showToast('Algo salió mal', 'warning');
+        }
+      },
+      onError: (error) => {
+        showToast(error?.message as string, 'danger');
+      },
+    });
+
+  const onAddToRemove = async (productId: string) => {
+    const token = getCartToken();
+
+    await removeFromCart({
+      token: token || '',
+      cartItemId: parseInt(productId),
+    });
+  };
+
+  //---------Update Cart Product Quantity--------//
+  const { mutateAsync: updateCartItem, isPending: isUpdateLoading } =
+    useMutation({
+      mutationFn: ({ token, ...input }: UpdateInput) =>
+        fetchHandler({
+          url: 'cart/updateCart',
+          contentType: true,
+          method: 'POST',
+          body: { ...input },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+
+      onSuccess: (response) => {
+        const responseData =
+          response?.data?.createUpdateCartItem?.updateCartItem;
+
+        if (isObject(responseData)) {
+          dispatch(addItem(responseData as any));
+        } else {
+          showToast('Algo salió mal', 'warning');
+        }
+      },
+
+      onError: (error) => {
+        showToast(error?.message as string, 'danger');
+      },
+    });
+
+  const onUpdateCart = async ({
+    cartItemId,
+    quantity,
+  }: {
+    cartItemId: number;
+    quantity: number;
+  }) => {
+    if (quantity < 1) {
+      showToast('La cantidad debe ser al menos 1', 'warning');
+      return;
+    }
+    const token = getCartToken();
+
+    await updateCartItem({
+      token: token || '',
+      cartItemId: cartItemId,
+      quantity,
+    });
+  };
+
+  return {
+    isCartLoading,
+    onAddToCart,
+    isRemoveLoading,
+    onAddToRemove,
+    onUpdateCart,
+    isUpdateLoading,
+  };
+};
