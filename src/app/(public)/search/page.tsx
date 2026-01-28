@@ -125,7 +125,7 @@ export default async function SearchPage({
   const beforeCursor: string | undefined = before;
   const rawColor = params?.color;
   const rawSize = params?.size;
-  const rawBrand = params?.brand;
+  const rawBrand = params?.fabric_type;
 
   const colorFilter =
     typeof rawColor === "string"
@@ -169,7 +169,7 @@ export default async function SearchPage({
 
   if (colorIds.length > 0) filterObject.color = colorIds.join(",");
   if (sizeIds.length > 0) filterObject.size = sizeIds.join(",");
-  if (brandIds.length > 0) filterObject.brand = brandIds.join(",");
+  if (brandIds.length > 0) filterObject.fabric_type = brandIds.join(",");
   const isFilterApplied = Object.keys(filterObject).length > 0;
   const filterInput = isFilterApplied
     ? JSON.stringify(filterObject)
@@ -228,6 +228,7 @@ export default async function SearchPage({
       locale: "en",
     }),
   ]);
+  console.log("🚀 ~ SearchPage ~ data:", JSON.stringify(data, null, 2));
 
   const filterAttributes = [
     colorFilterData?.attribute,
