@@ -46,6 +46,7 @@ export const PRODUCT_DETAILED_FRAGMENT = gql`
         node {
           id
           sku
+          price
           baseImageUrl
           images {
             edges {

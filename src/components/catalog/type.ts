@@ -23,6 +23,7 @@ export interface ProductNode {
       node: {
         id: string;
         sku: string;
+        price?: string;
         baseImageUrl?: string;
         images?: {
           edges: Array<{
@@ -151,6 +152,7 @@ export interface ProductData {
           }[];
         };
         id?: string;
+        price?: string;
         priceBaseImageUrl?: string;
         name?: string;
         name_id?: string;

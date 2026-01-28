@@ -45,6 +45,41 @@ export function ProductDescription({
     productSwatchReview?.combinations
   );
 
+  // Calculate the actual price to display based on variant selection
+  const displayPrice = (() => {
+    if (product?.type !== "configurable") {
+      return String(product?.minimumPrice || priceValue);
+    }
+
+    // If all variants are selected and we have a specific variant ID
+    if (variantInfo?.productid && variantInfo?.Instock) {
+      // Try to find the variant price from the variants data
+      const variants = product?.variants?.edges || [];
+      const selectedVariant = variants.find((edge: any) =>
+        edge.node.id === variantInfo.productid ||
+        edge.node.id.includes(variantInfo.productid)
+      );
+
+      if (selectedVariant?.node?.price) {
+        return String(selectedVariant.node.price);
+      }
+
+      // Fallback: try to get price from combinations if available
+      const combinations = safeParse(productSwatchReview?.combinations);
+      if (combinations && typeof combinations === 'object') {
+        const variantData = combinations[variantInfo.productid];
+        if (variantData?.price) {
+          return String(variantData.price);
+        }
+      }
+    }
+
+    // Default to minimum price if variant not fully selected
+    return String(priceValue);
+  })();
+
+  const showMinimumPriceLabel = product?.type === "configurable" && !variantInfo?.productid;
+
   const additionalData =
     productSwatchReview?.attributeValues?.edges?.map(
       (e: { node: any }) => e.node
@@ -72,26 +107,16 @@ export function ProductDescription({
 
         <div className="flex w-auto justify-between items-baseline gap-y-2 py-4 xs:flex-row xs:gap-y-0 sm:py-6 flex-wrap">
           <div className="flex gap-4 items-baseline">
-            {product?.type === "configurable" && (
+            {showMinimumPriceLabel && (
               <p className="text-base text-gray-600 dark:text-gray-400">
                 Desde los
               </p>
             )}
-            {product?.type === "simple" ? (
-              <>
-                <Price
-                  amount={String(product?.minimumPrice)}
-                  currencyCode={currencyCode}
-                  className="font-outfit text-xl md:text-2xl font-semibold"
-                />
-              </>
-            ) : (
-              <Price
-                amount={String(priceValue)}
-                currencyCode={currencyCode}
-                className="font-outfit text-xl md:text-2xl font-semibold"
-              />
-            )}
+            <Price
+              amount={displayPrice}
+              currencyCode={currencyCode}
+              className="font-outfit text-xl md:text-2xl font-semibold"
+            />
           </div>
 
           <Rating
