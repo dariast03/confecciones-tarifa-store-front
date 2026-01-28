@@ -97,3 +97,47 @@ export const PRODUCT_SECTION_FRAGMENT = gql`
     isSaleable
   }
 `;
+
+export const PRODUCT_GALLERY_FRAGMENT = gql`
+  fragment ProductGallery on Product {
+    id
+    sku
+    type
+    name
+    price
+    urlKey
+    combinations
+    superAttributeOptions
+    baseImageUrl
+    minimumPrice
+    specialPrice
+    isSaleable
+    variants {
+      edges {
+        node {
+          id
+          sku
+          baseImageUrl
+          price
+          type
+          name
+          isSaleable
+          superAttributeOptions
+          parent {
+            id
+            urlKey
+            name
+          }
+          images {
+            edges {
+              node {
+                id
+                publicPath
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

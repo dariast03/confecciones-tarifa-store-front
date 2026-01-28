@@ -43,14 +43,14 @@ const BottomNavbar = memo(function BottomNavbar({
           {/* Home */}
           <Link
             href="/"
-            aria-label="Go to Home Page"
+            aria-label="Ir al inicio"
             onClick={() => setActiveTab("home")}
             className={itemBase}
           >
             <div className={getIconWrapperClass("home")}>
               <HomeIcon />
             </div>
-            <span>Home</span>
+            <span>Inicio</span>
           </Link>
 
           {/* Categories */}

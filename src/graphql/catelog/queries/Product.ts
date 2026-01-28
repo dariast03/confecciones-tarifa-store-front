@@ -1,9 +1,10 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 import {
   PRODUCT_CORE_FRAGMENT,
   PRODUCT_DETAILED_FRAGMENT,
   PRODUCT_SECTION_FRAGMENT,
-} from "../fragments";
+  PRODUCT_GALLERY_FRAGMENT,
+} from '../fragments';
 
 /**
  * Fetch paginated products with filtering and sorting
@@ -121,7 +122,6 @@ export const GET_PRODUCT_SWATCH_REVIEW = gql`
   }
 `;
 
-
 /**
  * Fetch pagination info for products
  * Lightweight query for pagination controls
@@ -182,6 +182,54 @@ export const GET_RELATED_PRODUCTS = gql`
           node {
             ...ProductSection
           }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Fetch products for gallery view with all variant information
+ * This query includes complete variant data for displaying individual variants as products
+ */
+export const GET_GALLERY_PRODUCTS = gql`
+  ${PRODUCT_GALLERY_FRAGMENT}
+
+  query GetGalleryProducts(
+    $query: String
+    $sortKey: String
+    $reverse: Boolean
+    $first: Int
+    $last: Int
+    $after: String
+    $before: String
+    $channel: String
+    $locale: String
+    $filter: String
+  ) {
+    products(
+      query: $query
+      sortKey: $sortKey
+      reverse: $reverse
+      first: $first
+      last: $last
+      after: $after
+      before: $before
+      channel: $channel
+      locale: $locale
+      filter: $filter
+    ) {
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      edges {
+        node {
+          ...ProductGallery
         }
       }
     }

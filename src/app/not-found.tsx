@@ -207,7 +207,7 @@ export default function NotFound() {
       <p className="my-0 text-center text-black/60 dark:text-white md:my-1.5">
         Missing Page, but your next favourite chair is just a click away.
       </p>
-      <EventButton buttonName="Back to Home" redirect="/" />
+      <EventButton buttonName="Volver al inicio" redirect="/" />
     </div>
   );
 }

@@ -3,19 +3,16 @@ export {
   GET_PRODUCT_BY_URL_KEY,
   GET_PRODUCTS_PAGINATION,
   GET_RELATED_PRODUCTS,
-  GET_PRODUCT_SWATCH_REVIEW
-} from "./Product";
+  GET_PRODUCT_SWATCH_REVIEW,
+  GET_GALLERY_PRODUCTS,
+} from './Product';
 
-export {
-  GET_HOME_CATEGORIES
-} from "./HomeCategories"
+export { GET_HOME_CATEGORIES } from './HomeCategories';
 
 export {
   GET_FILTER_OPTIONS,
-  GET_FILTER_PRODUCTS
-} from "./ProductFilter"
+  GET_FILTER_PRODUCTS,
+  GET_FILTER_GALLERY_PRODUCTS,
+} from './ProductFilter';
 
-
-export {
-  GET_TREE_CATEGORIES
-} from "./Category"
+export { GET_TREE_CATEGORIES } from './Category';
