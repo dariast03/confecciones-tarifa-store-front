@@ -147,7 +147,7 @@ export default function MobileFilter({
                         isMultiline
                         items={attr.options}
                         aria-label={`Seleccionar ${attr.adminName}`}
-                        placeholder={`Todos ${formatLabel(attr.adminName)}s`}
+                        placeholder={`Todos`}
                         selectedKeys={tempFilters[attr.code] || new Set()}
                         selectionMode="multiple"
                         variant="flat"
