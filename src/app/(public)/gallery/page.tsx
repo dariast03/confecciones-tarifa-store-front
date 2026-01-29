@@ -30,7 +30,7 @@ const GalleryGridItems = dynamicImport(
 export const dynamicParams = true;
 
 export async function generateMetadata(): Promise<Metadata> {
-    const title = "Galería de Productos | Confecciones Tarifa - Todas las Variantes";
+    const title = "Todos los Productos | Confecciones Tarifa";
     const description = "Explora todas las variantes de nuestros productos artesanales para carnaval chapaco. Cada color, talla y estilo disponible en un solo lugar.";
 
     return generateMetadataForPage("gallery", {
@@ -193,10 +193,10 @@ export default async function GalleryPage({
         <>
             <MobileSearchBar />
             <h2 className="text-2xl sm:text-4xl font-semibold w-full max-w-screen-2xl mt-7.5 mb-3 mx-auto px-4 xss:px-7.5">
-                Galería - Todas las Variantes
+                Todos los productos
             </h2>
             <p className="text-base text-gray-600 dark:text-gray-400 w-full max-w-screen-2xl mb-6 mx-auto px-4 xss:px-7.5">
-                Explora cada variante de nuestros productos: todos los colores, tallas y estilos disponibles
+                Explora cada uno de nuestros productos: todos los colores, tallas y estilos disponibles
             </p>
 
             <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between w-full mx-auto max-w-screen-2xl px-4 xss:px-7.5">
