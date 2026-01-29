@@ -128,26 +128,8 @@ export const GalleryProductCard: FC<{
                         />
                     </div>
                 </Link>
-                <div
-                    className="hidden lg:flex absolute bottom-4 left-1/2 -translate-x-1/2 items-center gap-x-4 rounded-full border-[1.5px] border-white bg-white/70 px-4 py-1.5 text-xs font-semibold text-black opacity-0 shadow-2xl backdrop-blur-md duration-300 group-hover:opacity-100 dark:text-white"
-                >
-                    <Link
-                        href={variantUrl}
-                        className="text-black dark:text-white hover:underline"
-                    >
-                        Ver Detalle
-                    </Link>
-                </div>
-                <div
-                    className="flex lg:hidden absolute bottom-2.5 left-1/2 -translate-x-1/2 items-center gap-x-4 rounded-full border-[1.5px] border-white bg-white/70 px-4 py-1.5 text-xs font-semibold text-black opacity-100 shadow-2xl backdrop-blur-md duration-300 group-hover:opacity-100 dark:text-white"
-                >
-                    <Link
-                        href={variantUrl}
-                        className="text-black dark:text-white hover:underline"
-                    >
-                        Ver Detalle
-                    </Link>
-                </div>
+
+
             </div>
 
             <div>

@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return generateMetadataForPage("gallery", {
         title,
         description,
-        image: "/gallery-og.jpg",
+        image: "https://api.confecciones-tarifa.shop/storage/category/1/jgW0olTwFiotffFxW5ktpp6TY8JgVBZs92PYPcrD.webp",
         canonical: "/gallery",
     });
 }

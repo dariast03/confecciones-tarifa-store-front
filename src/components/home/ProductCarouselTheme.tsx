@@ -5,7 +5,7 @@ import { baseUrl, getImageUrl, NOT_IMAGE } from "@utils/constants";
 
 const Theme = ({ title, description, products }: ProductsSectionProps) => {
   return (
-    <section className="pt-8 sm:pt-12 lg:pt-20 w-full container mx-auto">
+    <section className="pt-8 sm:pt-12 lg:pt-20 w-full container mx-auto px-4">
       <div className="md:max-w-4.5xl mx-auto mb-6 w-full px-0 text-center xss:mb-10 md:px-36">
         <h2 className="mb-4 font-outfit text-xl md:text-4xl font-semibold text-black dark:text-white">
           {title}

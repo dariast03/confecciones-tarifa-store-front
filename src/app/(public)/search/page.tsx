@@ -96,7 +96,7 @@ export async function generateMetadata({
   return generateMetadataForPage("search", {
     title,
     description,
-    image: "/search-og.jpg",
+    image: "https://api.confecciones-tarifa.shop/storage/category/1/jgW0olTwFiotffFxW5ktpp6TY8JgVBZs92PYPcrD.webp",
     canonical: searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : "/search",
   });
 }
