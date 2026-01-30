@@ -35,7 +35,7 @@ const Theme: FC<{
             return (
               <ProductCard
                 key={index}
-                currency={currency}
+                currency={"BOB"}
                 imageUrl={imageUrl}
                 price={price}
                 product={product}

@@ -10,6 +10,8 @@ export const COLOR_MAP: Record<string, string> = {
   Beige: '#D4B896',
   Guindo: '#a74464', // Vino/Burgundy
   Azul: '#1E3A8A', // Azul oscuro
+  "Verde Claro": '#90EE90',
+  "Cafe": '#6B4C3B'
 };
 
 /**

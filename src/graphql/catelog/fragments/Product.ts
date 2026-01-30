@@ -94,6 +94,8 @@ export const PRODUCT_SECTION_FRAGMENT = gql`
     type
     baseImageUrl
     price
+    combinations
+    superAttributeOptions
     minimumPrice
     isSaleable
   }

@@ -106,7 +106,7 @@ export default function GalleryGridItems({
         return (
             <GalleryProductCard
                 key={`${variant.id}-${index}`}
-                currency={currency}
+                currency={"BOB"}
                 imageUrl={imageUrl || ""}
                 price={price}
                 variant={variant}

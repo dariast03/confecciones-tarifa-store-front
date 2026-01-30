@@ -17,7 +17,7 @@ const imageUrl = getImageUrl(product?.baseImageUrl, baseUrl, NOT_IMAGE);
     return (
       <ProductCard
         key={index}
-        currency={currency}
+        currency={"BOB"}
         imageUrl={imageUrl || ""}
         price={price}
         specialPrice={product?.minimumPrice}

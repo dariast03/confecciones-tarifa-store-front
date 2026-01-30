@@ -4,13 +4,19 @@ import { Rating } from "@/components/common/Rating";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { VariantSelector } from "./VariantSelector";
 import { ProductMoreDetails } from "./ProductMoreDetail";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getVariantInfo } from "@utils/hooks/useVariantInfo";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Prose from "@components/theme/search/Prose";
 import { ProductData, ProductReviewNode } from "../type";
 import { safeCurrencyCode, safePriceValue, safeParse } from "@utils/helper";
 import Link from "next/link";
+
+const createUrl = (pathname: string, params: URLSearchParams) => {
+  const paramsString = params.toString();
+  const queryString = `${paramsString.length ? "?" : ""}${paramsString}`;
+  return `${pathname}${queryString}`;
+};
 
 export function ProductDescription({
   product,
@@ -30,6 +36,8 @@ export function ProductDescription({
     productSwatchReview?.combinations
   ) || []) as never[];
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [userInteracted, setUserInteracted] = useState(false);
 
   const superAttributes = productSwatchReview?.superAttributeOptions
@@ -37,6 +45,40 @@ export function ProductDescription({
     : productSwatchReview?.superAttributes?.edges?.map(
       (e: { node: any }) => e.node
     ) || [];
+
+  // Auto-select attributes that have only one option (only for configurable products)
+  useEffect(() => {
+    if (product?.type !== "configurable" || !superAttributes || superAttributes.length === 0) {
+      return;
+    }
+
+    const currentParams = new URLSearchParams(searchParams.toString());
+    let hasChanges = false;
+
+    superAttributes.forEach((attr: any) => {
+      // Skip if this attribute is already selected
+      if (currentParams.has(attr.code)) {
+        return;
+      }
+
+      // Get the options for this attribute
+      const rawOptions = Array.isArray(attr.options)
+        ? attr.options
+        : attr.options?.edges?.map((edge: any) => edge.node) || [];
+
+      // If there's only one option, auto-select it
+      if (rawOptions.length === 1 && rawOptions[0]?.id) {
+        currentParams.set(attr.code, String(rawOptions[0].id));
+        hasChanges = true;
+      }
+    });
+
+    // Only update the URL if there were changes
+    if (hasChanges) {
+      const newUrl = createUrl(pathname, currentParams);
+      router.replace(newUrl, { scroll: false });
+    }
+  }, [product?.type, superAttributes, searchParams, pathname, router]);
 
   const variantInfo = getVariantInfo(
     product?.type === "configurable",
