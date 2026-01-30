@@ -13,7 +13,7 @@ const imageUrl = getImageUrl(product?.baseImageUrl, baseUrl, NOT_IMAGE);
   product?.type === "configurable"
     ? product?.minimumPrice ?? "0"
     : product?.price ?? "0";
-    const currency = product?.priceHtml?.currencyCode;
+    
     return (
       <ProductCard
         key={index}

@@ -101,7 +101,6 @@ export default function GalleryGridItems({
     return allVariants.map((variant: any, index: number) => {
         const imageUrl = getImageUrl(variant?.baseImageUrl, baseUrl, NOT_IMAGE);
         const price = variant?.price ?? "0";
-        const currency = "BOB";
 
         return (
             <GalleryProductCard

@@ -30,7 +30,7 @@ const Theme: FC<{
               product?.priceHtml?.finalPrice ||
               product?.priceHtml?.regularPrice ||
               "0";
-            const currency = product?.priceHtml?.currencyCode;
+            
 
             return (
               <ProductCard
