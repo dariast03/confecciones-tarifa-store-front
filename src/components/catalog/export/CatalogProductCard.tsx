@@ -126,10 +126,10 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
         }}
       >
         <div 
-          className="relative overflow-hidden"
+          className="relative h-full bg-red-500 w-136"
           style={{
-            width: "650px",
-            height: "650px",
+          //  width: "650px",
+            //height: "650px",
             borderRadius: "24px",
             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           }}
@@ -137,9 +137,8 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
           <img
             src={proxiedImageUrl}
             alt={product.name}
-            width={650}
-            height={650}
-            className="object-cover"
+          
+            className="object-contain w-full h-full"
             onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
             crossOrigin="anonymous"
             style={{
@@ -195,7 +194,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
                   ) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full"
+                      className="flex items-center gap-2 p-1 rounded-full"
                       style={{
                         backgroundColor: "#F9FAFB",
                         border: "2px solid #E5E7EB",
