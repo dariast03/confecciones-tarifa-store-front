@@ -98,7 +98,7 @@ export default async function CategoryPage({
     ),
     graphqlRequest<ProductFilterAttributeResponse>(GET_FILTER_OPTIONS, { id: "/api/admin/attributes/23", locale: "en" }),
     graphqlRequest<ProductFilterAttributeResponse>(GET_FILTER_OPTIONS, { id: "/api/admin/attributes/24", locale: "en" }),
-    graphqlRequest<ProductFilterAttributeResponse>(GET_FILTER_OPTIONS, { id: "/api/admin/attributes/25", locale: "en" }),
+    graphqlRequest<ProductFilterAttributeResponse>(GET_FILTER_OPTIONS, { id: "/api/admin/attributes/29", locale: "en" }),
   ]);
 
   const categories = treeData?.treeCategories || [];
@@ -125,7 +125,7 @@ export default async function CategoryPage({
 
   const rawColor = resolvedParams?.color;
   const rawSize = resolvedParams?.size;
-  const rawBrand = resolvedParams?.brand;
+  const rawBrand = resolvedParams?.fabric_type;
 
   const colorFilter = typeof rawColor === "string" ? rawColor.split(",") : [];
   const sizeFilter = typeof rawSize === "string" ? rawSize.split(",") : [];
@@ -143,7 +143,7 @@ export default async function CategoryPage({
 
   if (colorIds.length > 0) filterObject.color = colorIds.join(",");
   if (sizeIds.length > 0) filterObject.size = sizeIds.join(",");
-  if (brandIds.length > 0) filterObject.brand = brandIds.join(",");
+  if (brandIds.length > 0) filterObject.fabryc_type = brandIds.join(",");
 
   const filterInput = JSON.stringify(filterObject)
   const [data] = await Promise.all([
@@ -167,7 +167,7 @@ export default async function CategoryPage({
     .map((attr) => ({
       id: attr.id,
       code: attr.code,
-      adminName: attr.code.toUpperCase(),
+      adminName: attr?.adminName?.toUpperCase() || attr.code.toUpperCase(),
       options: attr.options.edges.map((o) => ({
         id: o.node.id,
         adminName: o.node.adminName,
