@@ -118,67 +118,6 @@ export default function CatalogExportPage() {
         }
     };
 
-    const testSimplePDF = async () => {
-        try {
-            console.log("Starting simple PDF test...");
-
-            // Create a simple test div
-            const testDiv = document.createElement('div');
-            testDiv.style.width = '1080px';
-            testDiv.style.height = '1080px';
-            testDiv.style.backgroundColor = '#FF0000';
-            testDiv.style.padding = '50px';
-            testDiv.innerHTML = `
-        <div style="background: white; padding: 50px; font-size: 48px; color: black;">
-          <h1 style="font-size: 72px; margin-bottom: 30px;">PRUEBA DE PDF</h1>
-          <p style="font-size: 36px; margin: 20px 0;">Este es un texto de prueba</p>
-          <p style="font-size: 36px; margin: 20px 0;">Número: 123456</p>
-          <div style="background: blue; color: white; padding: 30px; margin-top: 50px; font-size: 48px;">
-            Cuadro azul con texto
-          </div>
-        </div>
-      `;
-            document.body.appendChild(testDiv);
-
-            // Wait a bit
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Capture it
-            console.log("Capturing test div...");
-            const canvas = await html2canvas(testDiv, {
-                scale: 1,
-                width: 1080,
-                height: 1080,
-                backgroundColor: "#FF0000",
-                logging: true,
-            });
-
-            console.log("Canvas created:", canvas.width, 'x', canvas.height);
-
-            // Create PDF
-            const pdf = new jsPDF({
-                orientation: "portrait",
-                unit: "px",
-                format: [1080, 1080],
-                compress: true,
-            });
-
-            const imgData = canvas.toDataURL("image/jpeg", 0.95);
-            console.log("Image data length:", imgData.length);
-
-            pdf.addImage(imgData, "JPEG", 0, 0, 1080, 1080);
-            pdf.save("test-simple.pdf");
-
-            // Clean up
-            document.body.removeChild(testDiv);
-
-            console.log("Test PDF created successfully!");
-        } catch (error) {
-            console.error("Test PDF failed:", error);
-            alert("Error en prueba: " + error);
-        }
-    };
-
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -284,7 +223,7 @@ export default function CatalogExportPage() {
                             <strong>Precio:</strong> {config.showPrice ? "Visible" : "Oculto"}
                         </div>
                         <div>
-                            <strong>WhatsApp:</strong> +{config.whatsappNumber}
+                            <strong>WhatsApp:</strong> {config.whatsappNumber}
                         </div>
                         <div>
                             <strong>Instagram:</strong> {config.instagram}
@@ -298,18 +237,6 @@ export default function CatalogExportPage() {
                     </p>
                 </div>
 
-                {/* Test Button */}
-                <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <button
-                        onClick={testSimplePDF}
-                        className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg transition-colors"
-                    >
-                        🧪 Prueba Simple (Solo Texto)
-                    </button>
-                    <p className="text-xs text-yellow-700 mt-2">
-                        Genera un PDF de prueba con solo texto y colores para verificar que html2canvas funciona
-                    </p>
-                </div>
             </div>
 
             {/* Hidden Full-Size Cards for PDF Capture */}
