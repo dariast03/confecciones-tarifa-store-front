@@ -62,12 +62,12 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
   // Proxy external images to avoid CORS issues
   const proxiedImageUrl = useMemo(() => {
     if (!imageUrl || imageUrl === NOT_IMAGE) return NOT_IMAGE;
-    
+
     // If it's an external URL (from API), proxy it
     if (imageUrl.startsWith("http")) {
       return `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`;
     }
-    
+
     return imageUrl;
   }, [imageUrl]);
 
@@ -89,17 +89,17 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
         }}
       >
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-            <img
-              src={config.logo}
-              alt={config.businessName}
-              width={48}
-              height={48}
-              className="object-contain"
-              onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
-              crossOrigin="anonymous"
-            />
-          </div>
+
+          <img
+            src={config.logo}
+            alt={config.businessName}
+            width={48}
+            height={48}
+            className="object-contain w-16 h-16  rounded-full shadow-lg"
+            onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
+            crossOrigin="anonymous"
+          />
+
           <div>
             <h1 className="text-2xl font-bold text-white tracking-tight">
               {config.businessName}
@@ -118,17 +118,17 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
       </div>
 
       {/* Product Image - Large and centered */}
-      <div 
+      <div
         className="flex-1 flex items-center justify-center"
         style={{
           padding: "32px",
           background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%)",
         }}
       >
-        <div 
+        <div
           className="relative h-full bg-red-500 w-136"
           style={{
-          //  width: "650px",
+            //  width: "650px",
             //height: "650px",
             borderRadius: "24px",
             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
@@ -137,7 +137,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
           <img
             src={proxiedImageUrl}
             alt={product.name}
-          
+
             className="object-contain w-full h-full"
             onError={(e) => (e.currentTarget.src = NOT_IMAGE)}
             crossOrigin="anonymous"
@@ -148,7 +148,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
             }}
           />
           {/* Overlay gradient at bottom for better text readability */}
-          <div 
+          <div
             className="absolute inset-0"
             style={{
               background: "linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, transparent 100%)",
@@ -158,7 +158,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
       </div>
 
       {/* Product Info Section */}
-      <div 
+      <div
         className="flex flex-col"
         style={{
           height: "330px",
@@ -180,7 +180,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
           {/* Colors */}
           {colorOptions.length > 0 && (
             <div className="flex-1">
-              <p 
+              <p
                 className="text-sm font-semibold mb-3 uppercase tracking-wide"
                 style={{ color: "#4B5563" }}
               >
@@ -202,7 +202,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
                     >
                       <div
                         className="rounded-full"
-                        style={{ 
+                        style={{
                           width: "28px",
                           height: "28px",
                           backgroundColor: color.hex,
@@ -210,7 +210,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
                           boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
                         }}
                       />
-                      <span 
+                      <span
                         className="text-sm font-medium"
                         style={{ color: "#374151" }}
                       >
@@ -226,7 +226,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
           {/* Sizes */}
           {sizeOptions.length > 0 && (
             <div className="flex-1">
-              <p 
+              <p
                 className="text-sm font-semibold mb-3 uppercase tracking-wide"
                 style={{ color: "#4B5563" }}
               >
@@ -252,7 +252,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
         </div>
 
         {/* Price and Contact Footer */}
-        <div 
+        <div
           className="flex items-end justify-between mt-auto"
           style={{
             paddingTop: "16px",
@@ -261,7 +261,7 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
         >
           {config.showPrice ? (
             <div>
-              <p 
+              <p
                 className="text-sm font-medium mb-1"
                 style={{ color: "#4B5563" }}
               >
@@ -274,11 +274,11 @@ export const CatalogProductCard: FC<CatalogProductCardProps> = ({
                 Bs {parseFloat(price).toFixed(2)}
               </p>
             </div>
-          ): <div></div>}
+          ) : <div></div>}
 
           {/* Contact Info */}
           <div className="text-right space-y-1">
-            <div 
+            <div
               className="flex items-center justify-end gap-2"
               style={{ color: "#374151" }}
             >
