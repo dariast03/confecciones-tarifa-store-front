@@ -59,7 +59,7 @@ const CategoryCarousel: FC<CategoryCarouselProps> = async ({
                     fill
                     alt={`Imagen de todas las categorías`}
                     className="object-cover"
-                    src={NOT_IMAGE}
+                    src={"https://api.confecciones-tarifa.shop/storage/category/7/cErqXzgoxrUUDxknfk18o0Rjf7jXEJXDnbn0EirY.webp"}
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
                   />
                 </div>

@@ -96,7 +96,7 @@ export async function generateMetadata({
   return generateMetadataForPage("search", {
     title,
     description,
-    image: "https://api.confecciones-tarifa.shop/storage/category/1/jgW0olTwFiotffFxW5ktpp6TY8JgVBZs92PYPcrD.webp",
+    image: "https://api.confecciones-tarifa.shop/storage/category/1/35O77CSq0rE4etzxyEQ7FFyKWSQv6y6pC27yZ0Se.webp",
     canonical: searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : "/search",
   });
 }
@@ -228,7 +228,6 @@ export default async function SearchPage({
       locale: "en",
     }),
   ]);
-  console.log("🚀 ~ SearchPage ~ data:", JSON.stringify(data, null, 2));
 
   const filterAttributes = [
     colorFilterData?.attribute,
