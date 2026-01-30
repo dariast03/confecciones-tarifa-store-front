@@ -41,7 +41,7 @@ const Category: FC<{
                     title: product?.name || "",
                     page: "category",
                     amount: "0",
-                    currencyCode: "USD",
+                    currencyCode: "BOB",
                   }}
                   src={product?.logoUrl || NOT_IMAGE}
                 />

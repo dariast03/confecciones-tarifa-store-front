@@ -1,7 +1,7 @@
 export const Price = ({
   amount,
   className,
-  currencyCode = "USD",
+  currencyCode = "BOB",
   ...rest
 }: {
   amount: string;

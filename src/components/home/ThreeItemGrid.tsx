@@ -55,7 +55,7 @@ function ThreeItemGridItem({ product, size, priority }: {
                         position: size === 'full' ? 'center' : 'bottom',
                         title: product.name,
                         amount: product.type === 'configurable' ? (product.minimumPrice || '0') : (product.price || '0'),
-                        currencyCode: 'USD',
+                        currencyCode: 'BOB',
                     }}
                 />
             </Link>
@@ -99,7 +99,7 @@ function MobileThreeItemGridItem({ product, size, priority }: {
                         position: size === 'full' ? 'center' : 'bottom',
                         title: product.name,
                         amount: product.type === 'configurable' ? (product.minimumPrice || '0') : (product.price || '0'),
-                        currencyCode: 'USD',
+                        currencyCode: 'BOB',
                     }}
                 />
             </Link>

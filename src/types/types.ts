@@ -496,7 +496,7 @@ export type AttributeData = {
 
 export type ProductPrice = {
   value: number;
-  currencyCode?: 'USD' | 'EUR' | 'ARS' | string;
+  currencyCode?: 'BOB' | 'EUR' | 'ARS' | string;
   retailPrice?: number;
   salePrice?: number;
   listPrice?: number;

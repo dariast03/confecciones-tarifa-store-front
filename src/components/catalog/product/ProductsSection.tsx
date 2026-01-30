@@ -26,7 +26,7 @@ export function ProductsSection({ title, description, products }: ProductsSectio
           return (
             <ProductCard
               key={item.id ?? index}
-              currency="USD"
+              currency="BOB"
               imageUrl={imageUrl || ""}
               price={String(ProductPrice)}
               product={{

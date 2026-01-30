@@ -137,7 +137,7 @@ export async function bagistoFetchNoSession<T>({
         'Content-Type': 'application/json',
         'X-STOREFRONT-KEY': STOREFRONT_KEY,
         'x-locale': 'en',
-        'x-currency': 'USD',
+        'x-currency': 'BOB',
         ...headers,
       },
       body: JSON.stringify({
