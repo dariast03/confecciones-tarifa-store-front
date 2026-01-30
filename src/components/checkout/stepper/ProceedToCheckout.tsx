@@ -1,9 +1,7 @@
-"use client";
-import LoadingDots from "@components/common/icons/LoadingDots";
-import clsx from "clsx";
-import { useFormStatus } from "react-dom";
-
-
+'use client';
+import LoadingDots from '@components/common/icons/LoadingDots';
+import clsx from 'clsx';
+import { useFormStatus } from 'react-dom';
 
 function SubmitButton({
   availableForSale,
@@ -16,13 +14,13 @@ function SubmitButton({
 }) {
   const { pending } = useFormStatus();
   const buttonClasses =
-    "relative text-base w-fit cursor-pointer rounded-full px-8 py-3 font-bold border-white items-center justify-center bg-blue-600 tracking-wide text-white";
-  const disabledClasses = "cursor-wait opacity-60 hover:opacity-60";
+    'relative text-base w-fit cursor-pointer rounded-full px-8 py-3 font-bold border-white items-center justify-center bg-blue-600 tracking-wide text-white';
+  const disabledClasses = 'cursor-wait opacity-60 hover:opacity-60';
 
   if (!availableForSale) {
     return (
       <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
-        Processing...
+        Procesando...
       </button>
     );
   }
@@ -34,7 +32,7 @@ function SubmitButton({
       className={clsx(
         buttonClasses,
         {
-          "hover:opacity-90": true,
+          'hover:opacity-90': true,
           disabledClasses: pending,
         },
         className,

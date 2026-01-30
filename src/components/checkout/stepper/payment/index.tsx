@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { CartCheckoutPageSkeleton } from "@/components/common/skeleton/CheckoutSkeleton";
-import { fetchHandler } from "@utils/fetch-handler";
-import { getCartToken } from "@utils/getCartToken";
-import PaymentMethod from "./PaymentMethod";
-import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
+import { CartCheckoutPageSkeleton } from '@/components/common/skeleton/CheckoutSkeleton';
+import { fetchHandler } from '@utils/fetch-handler';
+import { getCartToken } from '@utils/getCartToken';
+import PaymentMethod from './PaymentMethod';
+import { useQuery } from '@tanstack/react-query';
+import { FC } from 'react';
 
 const Payment: FC<{
   selectedPayment?: {
@@ -16,18 +16,19 @@ const Payment: FC<{
   setIsOpen: (value: boolean) => void;
 }> = ({ selectedPayment, isOpen, setIsOpen }) => {
   const token = getCartToken();
+  console.log('🚀 ~ Payment ~ token:', token);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["paymentMethods", token],
+    queryKey: ['paymentMethods', token],
     enabled: !!token,
     queryFn: () =>
       fetchHandler({
-        url: "checkout/paymentMethods",
-        method: "POST",
+        url: 'checkout/paymentMethods',
+        method: 'POST',
         contentType: true,
         body: {},
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       }),
